@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Parallax 01 - Sunset</title>
+    <!-- 스타일링 -->
+    <style>
+        html { overflow: hidden; }
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+        .tot-con { width: 100%; height: 100%; overflow: hidden; }
+        .con { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+        .con1 { transform: scaleX(1.11); }
+        .con2 { transform: scaleX(1.25); }
+        .layer1 { background: #fed8c1; }
+        .layer2 { background: url("https://res.cloudinary.com/dkgrf00g1/image/upload/v1536453880/codepen/lay2.svg") no-repeat center center fixed; animation: slide-in-top 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+        .layer3 { background: url("https://res.cloudinary.com/dkgrf00g1/image/upload/v1536453880/codepen/lay3.svg") no-repeat center center fixed; animation: slide-in-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both; }
+        .layer4 { background: url("https://res.cloudinary.com/dkgrf00g1/image/upload/v1536453880/codepen/lay4.svg") no-repeat center center fixed; animation: slide-in-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both; }
+        .layer5 { background: url("https://res.cloudinary.com/dkgrf00g1/image/upload/v1536453880/codepen/lay5.svg") no-repeat center center fixed; animation: slide-in-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.55s both; }
+        .layer6 { background: url("https://res.cloudinary.com/dkgrf00g1/image/upload/v1536453880/codepen/lay6.svg") no-repeat center center fixed; animation: slide-in-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.75s both; }
+        .layer7 { background: url("https://res.cloudinary.com/dkgrf00g1/image/upload/v1536453880/codepen/lay7.svg") no-repeat center center fixed; animation: slide-in-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.85s both; }
+        .layer8 { background: url("https://res.cloudinary.com/dkgrf00g1/image/upload/v1536453880/codepen/lay8.svg") no-repeat center center fixed; animation: slide-in-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.9s both; }
+        .layer { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-size: cover; }
+
+        @keyframes slide-in-top {
+            0% { transform: translateY(-1000px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slide-in-bottom {
+            0% { transform: translateY(1000px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="tot-con">
+        <div class="layer layer1"></div>
+        <div class="layer layer2"></div>
+        <div class="con con1">
+            <div class="layer layer3"></div>
+            <div class="layer layer4"></div>
+            <div class="layer layer5"></div>
+            <div class="layer layer6"></div>
+        </div>
+        <div class="con con2">
+            <div class="layer layer7"></div>
+            <div class="layer layer8"></div>
+        </div>
+    </div>
+    <script>
+        const layers = document.querySelectorAll('.layer');
+        const layer3 = layers[2];
+        const layer4 = layers[3];
+        const layer5 = layers[4];
+        const layer6 = layers[5];
+        const layer7 = layers[6];
+        const layer8 = layers[7];
+
+        setTimeout(function() {
+            layers.forEach(function(layer) {
+                layer.style.animation = 'none';
+            });
+        }, 2000);
+
+        document.body.addEventListener('mousemove', function(e) {
+            if(!e.currentTarget.dataset.triggered) {
+                layers.forEach(function(layer) {
+                    if(layer.getAttribute('style')) {
+                        layer.style.transition = 'all 0.5s';
+                        layer.style.transform = 'none';
+                    }
+                });
+            }
+            e.currentTarget.dataset.triggered = true;
+
+            let width = window.innerWidth / 2;
+            let mouseMoved2 = (width - e.pageX) / 50;
+            let mouseMoved3 = (width - e.pageX) / 40;
+            let mouseMoved4 = (width - e.pageX) / 30;
+            let mouseMoved5 = (width - e.pageX) / 20;
+            let mouseMoved6 = (width - e.pageX) / 10;
+            let mouseMoved7 = (width - e.pageX) / 5;
+
+            layer3.style.transform = `translateX(${mouseMoved2}px)`;
+            layer4.style.transform = `translateX(${mouseMoved3}px)`;
+            layer5.style.transform = `translateX(${mouseMoved4}px)`;
+            layer6.style.transform = `translateX(${mouseMoved5}px)`;
+            layer7.style.transform = `translateX(${mouseMoved6}px)`;
+            layer8.style.transform = `translateX(${mouseMoved7}px)`;
+        });
+
+        document.body.addEventListener('mouseleave', function(e) {
+            layers.forEach(function(layer, idx) {
+                layer.style.transition = 'all 0.5s';
+                layer.style.transform = 'none';
+            });
+        });
+
+        document.body.addEventListener('mouseenter', function(e) {
+            layers.forEach(function(layer, idx) {
+                setTimeout(function() {
+                    layer.style.transition = 'none';
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>
