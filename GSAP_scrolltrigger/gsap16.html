@@ -12,7 +12,7 @@
     <style>
         * { margin: 0; padding: 0; }
         a { color: #fff; text-decoration: none; }
-        body { color: #fff; font-family: "NexonLv1Gothic"; font-weight: 300; background-color: #111; }
+        body { color: #fff; font-family: "NexonLv1Gothic"; font-weight: 300; background-color: #000; }
         
         #parallax__title { position: fixed; left: 20px; top: 20px; z-index: 1000; }
         #parallax__title h1 { font-size: 30px; border-bottom: 1px dashed #fff; margin-bottom: 10px; padding-bottom: 5px; font-weight: 400; display: inline-block; }
@@ -31,7 +31,7 @@
         .parallax__item__imgWrap { width: 100%; padding-bottom: 56.25%; background: var(--black); position: relative; overflow: hidden; }
         .parallax__item__img { position: absolute; left: -5%; top: -5%; width: 110%; height: 110%; background-size: cover; background-repeat: no-repeat; background-position: center center; filter: saturate(0%); transition: all 1s; }
         .parallax__item__img:hover { filter: saturate(100%); transform: scale(1.025); }
-        .parallax__item__desc { font-size: 4vw; line-height: 1.4; margin-top: -5vw; margin-left: -4vw; z-index: 100; position: relative; }
+        .parallax__item__desc { font-size: 4vw; line-height: 1.4; margin-top: -5vw; margin-left: -4vw; z-index: 100; position: relative; word-break: keep-all; }
         .parallax__item:nth-child(even) .parallax__item__desc { margin-left: auto; margin-right: -4vw; }
         
         #section1 .parallax__item__img { background-image: url("../assets/img/images01@2.jpg"); }
@@ -43,18 +43,12 @@
         #section7 .parallax__item__img { background-image: url("../assets/img/images07@2.jpg"); }
         #section8 .parallax__item__img { background-image: url("../assets/img/images08@2.jpg"); }
         #section9 .parallax__item__img { background-image: url("../assets/img/images09@2.jpg"); }
-
-        #parallax__nav { position: fixed; right: 20px; top: 20px; z-index: 1000; background-color: rgba(0, 0, 0, 0.4); padding: 15px 20px; border-radius: 50px; }
-        #parallax__nav li { list-style: none; display: inline; }
-        #parallax__nav li a { display: inline-block; width: 30px; height: 30px; padding: 5px; text-align: center; line-height: 30px; }
-        #parallax__nav li a.active { background: #fff; color: #000; border-radius: 50%; }
     </style>
 </head>
 <body>
     <header id="parallax__title">
-        <h1>GSAP Parallax Effect 09</h1>
-        <p>GSAP scrollTrigger - 메뉴 이동 효과</p>
-        <!-- 자바스크립트가 나을 것 같음 -->
+        <h1>GSAP Parallax Effect 16</h1>
+        <p>GSAP scrollTrigger - smooth 효과</p>
         <ul>
             <li><a href="gsap01.html">1</a></li>
             <li><a href="gsap02.html">2</a></li>
@@ -64,29 +58,16 @@
             <li><a href="gsap06.html">6</a></li>
             <li><a href="gsap07.html">7</a></li>
             <li><a href="gsap08.html">8</a></li>
-            <li class="active"><a href="gsap09.html">9</a></li>
+            <li><a href="gsap09.html">9</a></li>
             <li><a href="gsap10.html">10</a></li>
             <li><a href="gsap11.html">11</a></li>
             <li><a href="gsap12.html">12</a></li>
             <li><a href="gsap13.html">13</a></li>
             <li><a href="gsap14.html">14</a></li>
             <li><a href="gsap15.html">15</a></li>
-            <li><a href="gsap16.html">16</a></li>
+            <li class="active"><a href="gsap16.html">16</a></li>
         </ul>
     </header>
-    <nav id="parallax__nav">
-        <ul>
-            <li><a href="#section1" class="active">s1</a></li>
-            <li><a href="#section2">s2</a></li>
-            <li><a href="#section3">s3</a></li>
-            <li><a href="#section4">s4</a></li>
-            <li><a href="#section5">s5</a></li>
-            <li><a href="#section6">s6</a></li>
-            <li><a href="#section7">s7</a></li>
-            <li><a href="#section8">s8</a></li>
-            <li><a href="#section9">s9</a></li>
-        </ul>
-    </nav>
     <main id="parallax__cont">
         <section id="section1" class="parallax__item">
             <span class="parallax__item__num">01</span>
@@ -183,35 +164,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1/bundled/lenis.min.js"></script>
 
     <script>
-        let links = gsap.utils.toArray('#parallax__nav ul li a');
+        const lenis = new Lenis();
 
-        links.forEach(link => {
-            let elem = document.querySelector(link.getAttribute('href')); // #section들 선택됨
-            
-            let linkST = ScrollTrigger.create({
-                trigger: elem,
-                start: 'top top'
-            });
-
-            ScrollTrigger.create({ // 해당 섹션에 입장하면 메뉴 active 클래스 이동
-                trigger: elem,
-                start: 'top center',
-                end: 'bottom center',
-                onToggle: () => setActive(link)
-            });
-
-            link.addEventListener('click', e => {
-                e.preventDefault();
-                gsap.to(window, { duration: 1, scrollTo: linkST.start, overwrite: 'auto' });
-            });
+        lenis.on('scroll', e => {
+            console.log(e);
         });
 
-        function setActive(link) {
-            links.forEach(el => el.classList.remove('active'));
-            link.classList.add('active');
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
         }
+
+        requestAnimationFrame(raf);
     </script>
 </body>
 </html>
