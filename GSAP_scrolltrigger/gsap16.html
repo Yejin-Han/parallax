@@ -48,7 +48,7 @@
 <body>
     <header id="parallax__title">
         <h1>GSAP Parallax Effect 16</h1>
-        <p>GSAP scrollTrigger - smooth 효과</p>
+        <p>GSAP scrollTrigger - lenis와 gsap 결합</p>
         <ul>
             <li><a href="gsap01.html">1</a></li>
             <li><a href="gsap02.html">2</a></li>
@@ -167,18 +167,33 @@
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1/bundled/lenis.min.js"></script>
 
     <script>
-        const lenis = new Lenis();
-
-        lenis.on('scroll', e => {
-            console.log(e);
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         });
 
         function raf(time) {
             lenis.raf(time);
+            ScrollTrigger.update(); // 이거 없이도 간단한거 되기는 하는데 여튼 이게 핵심 코드인듯? (scrollbar의 loaction을 체크하고 ScrollTrigger의 progress와 direction value를 업데이트함, start/end position recalculate하는건 refresh임!!)
             requestAnimationFrame(raf);
         }
 
         requestAnimationFrame(raf);
+
+        gsap.utils.toArray('.parallax__item__desc').forEach(item => {
+            gsap.to(item, {
+                yPercent: -100,
+                ease: 'none',
+                duration: 0.5,
+                scrollTrigger: {
+                    trigger: item,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    markers: true,
+                    scrub: 0.5
+                }
+            });
+        });
     </script>
 </body>
 </html>
