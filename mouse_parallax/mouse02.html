@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Parallax 02 - 약간 Landing Page 결</title>
+    <!-- 스타일링 -->
+    <style>
+        @import url("https://fonts.googleapis.com/css?family=Permanent+Marker|Shadows+Into+Light+Two");
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+        * { box-sizing: border-box; margin: 0; }
+        html, body { font-family: 'Nunito', sans-serif; position: relative; height: 100%; }
+        .wrapper { height: 100%; }
+        .wrapper .parallax-container { display: flex; align-items: stretch; height: 100%; overflow: hidden; position: relative; cursor: pointer; }
+        .wrapper .parallax { flex: 1 1 auto; background-image: url('https://i.pinimg.com/originals/e0/57/44/e05744161d7500a183d5ec3a38a6e626.jpg'); background-size: cover; display: flex; align-items: center; justify-content: center; color: #dcdcdc; text-align: center; width: 120%; height: 120%; position: absolute; top: -10%; left: -10%; right: -10%; bottom: -10%; }
+        .wrapper h1 { font-size: 6rem; line-height: 6.75rem; font-family: 'Permanent Marker', cursive; letter-spacing: 3px; }
+        .wrapper .line { border: 0.05rem solid #dcdcdc; margin: 0.5rem 0; }
+        .wrapper .parallax span { font-family: 'Shadows Into Light Two', cursive; font-weight: bold; letter-spacing: 1px; }
+        .wrapper .text-container { padding: 10vh 10vw; text-align: center; }
+        .wrapper .text-container .text-block h5 { font-size: 2.5rem; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <section class="parallax-container">
+            <div class="parallax">
+                <div class="title">
+                    <h1>HILLS</h1>
+                    <div>
+                        <div class="line"></div>
+                        <span>something about this hills</span>
+                        <div class="line"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="text-container">
+            <div class="text-block">
+                <h5>Title Heading</h5>
+                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusamus, praesentium voluptatem cum repudiandae quos non laboriosam aut? Aliquid, velit eaque! Quo aut esse modi voluptatem eligendi illo nisi a deleniti!</p>
+            </div>
+        </section>
+    </div>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js'></script>
+    <script>
+        $(document).ready(function() {
+            $('.parallax-container').mousemove(function(e) {
+                let screenWidth = $(window).width();
+                let screenHeight = $(window).height();
+
+                $('.parallax').css({
+                    transform: `translate(-${e.pageX / screenWidth * 20}px, -${e.pageY / screenHeight * 20}px)`
+                });
+
+                $('.parallax .title').css({
+                    transform: `translate(${e.pageX / screenWidth * 45}px, ${e.pageY / screenHeight * 45}px)`
+                });
+            });
+        });
+    </script>
+</body>
+</html>
