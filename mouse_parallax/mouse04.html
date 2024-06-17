@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Parallax 04 - Moon (Canvas)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <style>
+        html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.querySelector('#canvas');
+        const ctx = canvas.getContext('2d');
+
+        function setCanvasSize() {
+            const width = (canvas.width = window.innerWidth);
+            const height = (canvas.height = window.innerHeight);
+
+            return { width, height };
+        }
+
+        let { width, height } = setCanvasSize();
+        let cx = width / 2;
+        let cy = height / 2;
+
+        let drawerFlag = false, frameFlag = false;
+        
+        let stars = createStars(20);
+        drawEffect(cx, cy);
+
+        window.addEventListener('mousemove', (e) => {
+            if(!drawerFlag && !frameFlag) {
+                drawerFlag = true;
+
+                setTimeout(() => {
+                    drawEffect(e.clientX, e.clientY); // mx, my가 업데이트 됨
+                    drawerFlag = false;
+                }, 25); // frame delay
+            }
+        });
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function createStars(cantidad = 10) {
+            const stars = [];
+
+            for(i = 0; i < cantidad; i++) {
+                const x = rand(50, width - 50);
+                const y = rand(50, height - 50);
+                stars.push([x, y]);
+            }
+
+            return stars;
+        }
+
+        function drawEffect(mx, my) {
+            const x = (p) => calcPercentMove(mx, cx, p); // 마우스무브했을 때 움직일 양
+            const y = (p) => calcPercentMove(my, cy, p); // 마우스무브했을 때 움직일 양
+            frameFlag = true;
+
+            requestAnimationFrame(() => {
+                // stars
+                drawStars(stars, mx, my, -0.5);
+
+                // circles
+                drawCircle(x(2), y(2), 300, '#c1c1c115');
+                drawCircle(x(4), y(4), 260, '#c1c1c115');
+                drawCircle(x(6), y(6), 220, '#c1c1c130');
+                drawCircle(x(8), y(8), 180, '#c1c1c140');
+
+                // moon
+                drawCircle(x(10), y(10), 140, '#e1e1e1cc');
+                drawCircle(x(10) - 90, y(10) + 20, 30, '#c1c1c180');
+                drawCircle(x(10) + 40, y(10) - 70, 50, '#c1c1c180');
+
+                // mouse circle
+                drawCircle(mx, my, 20, '#f1f1f180');
+
+                frameFlag = false;
+            });
+        }
+
+        function drawCanvas(color) {
+            ctx.beginPath();
+            ctx.fillStyle = color;
+            ctx.fillRect(0, 0, width, height);
+        }
+
+        function drawStars(stars, mx, my, p) {
+            drawCanvas('#202045cc'); // 마우스 잔상은 여기서 캔버스 초기화를 약간이지만 투명하게 하기 때문에 생기는 거래
+            
+            stars.forEach((star) => {
+                let x = calcPercentMove(mx, star[0], p);
+                let y = calcPercentMove(my, star[1], p);
+                drawCircle(x, y, 1, '#c1c1c1c1');
+            });
+        }
+
+        function drawCircle(x, y, r, color) {
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, 2 * Math.PI);
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+
+        function resizeCanvas() {
+            ({ width, height } = setCanvasSize());
+            cx = width / 2;
+            cy = height / 2;
+            stars = createStars(20);
+            drawEffect(cx, cy);
+        }
+
+        function calcPercentMove(point, ref, percent) { // 기준점 ref로부터 point가 percent 비율로 이동한 위치 계산
+            return Math.round(((point - ref) * percent) / 100 + ref);
+        }
+
+        function rand(min, max) {
+            return Math.round(Math.random() * (max - min) + min);
+        }
+    </script>
+</body>
+</html>
