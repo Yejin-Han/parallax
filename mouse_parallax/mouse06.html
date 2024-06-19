@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Parallax 06 - GSAP man</title>
+    <style>
+        body { overflow: hidden; background-color: darkgray; position: absolute; top: 0; left: 0; width: 100%; height: 100%; perspective: 1000px; transform-style: preserve-3d; }
+        #container { outline: 1px solid transparent; position: absolute; left: 50%; top: 50%; margin-left: -250px; margin-top: -265px; width: 500px; height: 537px; transform-style: preserve-3d; transform: translateZ(0); background: url('http://zadesigns.com/tron/background.jpg') no-repeat; }
+        .figure { outline: 1px solid transparent; width: 142px; height: 483px; background: url('http://zadesigns.com/tron/tron.png') no-repeat; position: absolute; left: 50%; bottom: 0; margin-left: -71px; transform: translateZ(120px); }
+        .gsap { outline: 1px solid transparent; width: 396px; height: 128px; background: url('https://zadesigns.com/tron/GSAP.png') no-repeat; position: absolute; left: 50%; top: 30px; margin-left: -198px; transform: translateZ(60px); }
+        .tagline { outline: 1px solid transparent; width: 500px; position: absolute; left: 50%; bottom: 0; margin-left: -280px; transform: translateZ(80px); padding: 0 30px; background: rgba(0, 0, 0, 0.6); font-family: Arial, Helvetica, sans-serif; font-size: 30px; color: #f9e48b; line-height: 60px; text-align: center; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div class="gsap"></div>
+        <div class="figure"></div>
+        <div class="tagline">
+            GSAP 3D Parallax Demo
+        </div>
+    </div>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let raf = null;
+            let cx = window.innerWidth / 2;
+            let cy = window.innerHeight / 2;
+            const mouse = { x: 0, y: 0 };
+
+            $(window).resize(function() {
+                cx = window.innerWidth / 2;
+                cy = window.innerHeight / 2;
+            });
+
+            $('body').mousemove(function(e) {
+                mouse.x = e.pageX;
+                mouse.y = e.pageY;
+
+                cancelAnimationFrame(raf);
+                raf = requestAnimationFrame(update);
+            });
+
+            function update() {
+                dx = mouse.x - cx;
+                dy = mouse.y - cy;
+                
+                tiltX = dy / cy; // -20 ~ 20, rotateX가 가로축을 기준으로 돌리는거니까 세로로 돌리는 것처럼 보여서 y 좌표를 가지고 노는거라고 생각하면 될 듯
+                tiltY = -(dx / cx); // 20 ~ -20
+                rad = Math.sqrt(Math.pow(tiltX, 2) + Math.pow(tiltY, 2));
+                deg = rad * 20;
+                
+                gsap.to('#container', {
+                    duration: 1,
+                    transform: `rotate3d(${tiltX}, ${tiltY}, 0, ${deg}deg)`,
+                    ease: 'power2.out'
+                });
+
+                // 이 경우랑은 비슷한 듯 다르네여...
+                // gsap.to("#container", {
+                //     duration: 1,
+                //     rotateX: tiltX * deg,
+                //     rotateY: tiltY * deg,
+                //     ease: "power2.out"
+                // });
+
+                console.log(dx, dy, tiltX, tiltY, rad, deg);
+            }
+        });
+    </script>
+</body>
+</html>
