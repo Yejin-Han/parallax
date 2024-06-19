@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Parallax 07 - using JQuery prototype fn</title>
+    <style>
+        body { margin: 0; padding: 0; }
+        .wrapper { margin: 5% auto 0; }
+        .wrapper, .wrapper * { position: relative; width: 100%; max-width: 1170px; }
+        .wrapper--inner { overflow: hidden; padding-bottom: 58.5%; border-radius: 8px; background: #5653ff; }
+        .object { position: absolute; top: 0; left: 0; width: auto; height: auto; z-index: 2; }
+        .object--1 { left: auto; right: -5%; }
+        .object--2 { left: -10%; top: auto; bottom: 0; }
+        .object--3 { width: 82.5%; right: 0; margin: 5% auto 0; }
+        .object--4 { width: 42.34042553%; left: 8.5106382979%; margin-top: 22.0833333333%; }
+        .object--5 { top: -3%; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <img src="https://res.cloudinary.com/pitch-software/image/upload/f_auto/v1618927889/website-assets/home/brand-styles/desktop/colorful/brand-styles__typo-right.png" alt="Clouds" class="object object--1">
+        <img src="https://res.cloudinary.com/pitch-software/image/upload/f_auto/v1618927889/website-assets/home/brand-styles/desktop/colorful/brand-styles__typo-left.png" alt="Clouds" class="object object--2">
+        <div class="wrapper--inner">
+            <img src="https://res.cloudinary.com/pitch-software/image/upload/f_auto/v1618569085/website-assets/home/brand-styles/desktop/brand-styles__heading.png" alt="Clouds" class="object object--3">
+            <img src="https://res.cloudinary.com/pitch-software/image/upload/f_auto/v1618569085/website-assets/home/brand-styles/desktop/colorful/brand-styles__copy.png" alt="Clouds" class="object object--4">
+            <img src="https://res.cloudinary.com/pitch-software/image/upload/f_auto/v1618569090/website-assets/home/brand-styles/desktop/colorful/brand-styles__floating-items.png" alt="Clouds" class="object object--5">
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script>
+        $.fn.parallax = function(resistance, mouse) {
+            $el = $(this);
+            console.log(mouse.clientX, mouse.clientY);
+            gsap.to($el, {
+                duration: 0.6,
+                x: -((mouse.clientX - window.innerWidth / 2) / resistance),
+                y: -((mouse.clientY - window.innerHeight / 2) / resistance),
+            });
+        };
+
+        $('.wrapper').mousemove(function(e) {
+            $('.object--1').parallax(10, e);
+            $('.object--2').parallax(10, e);
+            $('.object--3').parallax(30, e);
+            $('.object--4').parallax(30, e);
+            $('.object--5').parallax(20, e);
+        });
+    </script>
+</body>
+</html>
